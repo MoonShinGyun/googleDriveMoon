@@ -1,0 +1,82 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: upload
+          uri: http://localhost:8081
+          predicates:
+            - Path=/files/**, 
+        - id: indexing
+          uri: http://localhost:8082
+          predicates:
+            - Path=/indices/**, 
+        - id: dashboard
+          uri: http://localhost:8083
+          predicates:
+            - Path=, 
+        - id: video processing
+          uri: http://localhost:8084
+          predicates:
+            - Path=/filestatuses/**, 
+        - id: frontend
+          uri: http://localhost:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: upload
+          uri: http://upload:8080
+          predicates:
+            - Path=/files/**, 
+        - id: indexing
+          uri: http://indexing:8080
+          predicates:
+            - Path=/indices/**, 
+        - id: dashboard
+          uri: http://dashboard:8080
+          predicates:
+            - Path=, 
+        - id: video processing
+          uri: http://videoProcessing:8080
+          predicates:
+            - Path=/filestatuses/**, 
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
